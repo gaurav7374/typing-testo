@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Typing Test - Check your typing skills</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #1e88e5;
+            --secondary-color: #64b5f6;
+            --accent-color: #0d47a1;
+            --background-color: #f0f8ff;
+            --text-color: #333;
+            --card-bg: #fff;
+            --border-color: #ddd;
+        }
+
+        .dark-mode {
+            --primary-color: #0d47a1;
+            --secondary-color: #1565c0;
+            --accent-color: #64b5f6;
+            --background-color: #1a202c;
+            --text-color: #f0f8ff;
+            --card-bg: #2d3748;
+            --border-color: #4a5568;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-color);
+        }
+
+        .progress-ring {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .character {
+            display: inline-block;
+            margin-right: 1px;
+            border-bottom: 2px solid transparent;
+        }
+
+        .character.correct {
+            color: #4CAF50;
+        }
+
+        .character.incorrect {
+            color: #F44336;
+            text-decoration: underline;
+        }
+
+        .character.current {
+            border-bottom: 2px solid var(--primary-color);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .blinking-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background-color: var(--text-color);
+            margin-left: 2px;
+            animation: blink 1s infinite;
+        }
+
+        .test-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .test-card {
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .test-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .test-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .certificate {
+            background-color: #fff;
+            color: #000;
+            padding: 2rem;
+            border: 10px solid #1e88e5;
+            position: relative;
+        }
+
+        .certificate-seal {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 100px;
+            height: 100px;
+            background-color: #1e88e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transform: rotate(-15deg);
+        }
+
+        .keyboard-key {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin: 2px;
+            box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+        }
+
+        .keyboard-key.problem {
+            background-color: rgba(244, 67, 54, 0.2);
+            border-color: #F44336;
+        }
+
+        /* Navigation sidebar */
+        .nav-sidebar {
+            width: 200px;
+            position: fixed;
+            height: 100%;
+            background-color: var(--card-bg);
+            padding: 1rem;
+            border-right: 1px solid var(--border-color);
+        }
+
+        .nav-content {
+            margin-left: 200px;
+            padding: 1rem;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .nav-sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .nav-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar Navigation -->
+        <div class="nav-sidebar">
+            <div class="flex items-center mb-6">
+                <div class="text-2xl font-bold text-blue-500">
+                    <i class="fas fa-keyboard mr-2"></i>TypeTest
+                </div>
+            </div>
+            
+            <div class="nav-item active" onclick="showSection('home')">
+                <i class="fas fa-home mr-2"></i>Home
+            </div>
+            <div class="nav-item" onclick="showSection('typing-test')">
+                <i class="fas fa-keyboard mr-2"></i>Typing Test
+            </div>
+            <div class="nav-item" onclick="showSection('typing-practice')">
+                <i class="fas fa-dumbbell mr-2"></i>Typing Practice
+            </div>
+            <div class="nav-item" onclick="showSection('typing-lessons')">
+                <i class="fas fa-book mr-2"></i>Typing Lessons
+            </div>
+            <div class="nav-item" onclick="showSection('typing-games')">
+                <i class="fas fa-gamepad mr-2"></i>Typing Games
+            </div>
+            <div class="nav-item" onclick="showSection('typing-challenge')">
+                <i class="fas fa-trophy mr-2"></i>Typing Challenge
+            </div>
+            <div class="nav-item" onclick="showSection('typing-certificate')">
+                <i class="fas fa-certificate mr-2"></i>Certification
+            </div>
+            
+            <div class="mt-auto pt-4">
+                <div class="flex items-center justify-between">
+                    <span>Dark Mode</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="nav-content flex-grow">
+            <!-- Home Section -->
+            <section id="home" class="section-content">
+                <div class="card">
+                    <h1 class="text-3xl font-bold text-center mb-4">Check your typing skills in a minute</h1>
+                    <p class="text-center text-lg mb-6">Type away to join millions of test takers!</p>
+                    
+                    <div class="flex justify-center mb-8">
+                        <div class="max-w-md w-full">
+                            <div class="mb-4">
+                                <label for="testDuration" class="block mb-2">Test Duration:</label>
+                                <select id="testDuration" class="w-full p-2 border rounded">
+                                    <option value="1">1 Minute Test</option>
+                                    <option value="2">2 Minutes Test</option>
+                                    <option value="5">5 Minutes Test</option>
+                                </select>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="textDifficulty" class="block mb-2">Text Difficulty:</label>
+                                <select id="textDifficulty" class="w-full p-2 border rounded">
+                                    <option value="easy">Easy Text</option>
+                                    <option value="medium" selected>Medium Text</option>
+                                    <option value="hard">Hard Text</option>
+                                </select>
+                            </div>
+                            
+                            <button onclick="startTypingTest()" class="btn-primary w-full py-3">START TEST</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2 class="text-2xl font-bold mb-4 mt-8">Standard Tests</h2>
+                <div class="test-selection">
+                    <div class="card test-card" onclick="selectTest('easy')">
+                        <div class="test-icon"><i class="far fa-smile"></i></div>
+                        <h3 class="text-xl mb-2">Easy Text</h3>
+                        <p class="text-sm mb-3">Simple text with common words</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                    
+                    <div class="card test-card" onclick="selectTest('medium')">
+                        <div class="test-icon"><i class="far fa-meh"></i></div>
+                        <h3 class="text-xl mb-2">Medium Text</h3>
+                        <p class="text-sm mb-3">Moderate difficulty with some complex words</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                    
+                    <div class="card test-card" onclick="selectTest('hard')">
+                        <div class="test-icon"><i class="far fa-frown"></i></div>
+                        <h3 class="text-xl mb-2">Hard Text</h3>
+                        <p class="text-sm mb-3">Complex text with challenging vocabulary</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                    
+                    <div class="card test-card" onclick="selectTest('benchmark')">
+                        <div class="test-icon"><i class="fas fa-balance-scale"></i></div>
+                        <h3 class="text-xl mb-2">Benchmark</h3>
+                        <p class="text-sm mb-3">Compare your skills with others</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                </div>
+                
+                <h2 class="text-2xl font-bold mb-4 mt-8">Advanced Tests</h2>
+                <div class="test-selection">
+                    <div class="card test-card" onclick="selectTest('spelling')">
+                        <div class="test-icon"><i class="fas fa-spell-check"></i></div>
+                        <h3 class="text-xl mb-2">Tricky Spelling</h3>
+                        <p class="text-sm mb-3">Text with commonly misspelled words</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                    
+                    <div class="card test-card" onclick="selectTest('blind')">
+                        <div class="test-icon"><i class="fas fa-eye-slash"></i></div>
+                        <h3 class="text-xl mb-2">Blind Typing</h3>
+                        <p class="text-sm mb-3">Type without seeing your input</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                    
+                    <div class="card test-card" onclick="selectTest('story')">
+                        <div class="test-icon"><i class="fas fa-book-open"></i></div>
+                        <h3 class="text-xl mb-2">Story Typing</h3>
+                        <p class="text-sm mb-3">Type a continuous story</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                    
+                    <div class="card test-card" onclick="selectTest('themed')">
+                        <div class="test-icon"><i class="fas fa-theater-masks"></i></div>
+                        <h3 class="text-xl mb-2">Themed Text</h3>
+                        <p class="text-sm mb-3">Texts from specific industries</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                </div>
+                
+                <h2 class="text-2xl font-bold mb-4 mt-8">Professional Tests</h2>
+                <div class="test-selection">
+                    <div class="card test-card" onclick="selectTest('certificate')">
+                        <div class="test-icon"><i class="fas fa-award"></i></div>
+                        <h3 class="text-xl mb-2">Certificate</h3>
+                        <p class="text-sm mb-3">Get a typing certificate</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                    
+                    <div class="card test-card" onclick="selectTest('legal')">
+                        <div class="test-icon"><i class="fas fa-gavel"></i></div>
+                        <h3 class="text-xl mb-2">Legal</h3>
+                        <p class="text-sm mb-3">Legal terminology and documents</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                    
+                    <div class="card test-card" onclick="selectTest('medical')">
+                        <div class="test-icon"><i class="fas fa-stethoscope"></i></div>
+                        <h3 class="text-xl mb-2">Medical</h3>
+                        <p class="text-sm mb-3">Medical terminology and reports</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                    
+                    <div class="card test-card" onclick="selectTest('business')">
+                        <div class="test-icon"><i class="fas fa-briefcase"></i></div>
+                        <h3 class="text-xl mb-2">Business</h3>
+                        <p class="text-sm mb-3">Business correspondence and reports</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                    
+                    <div class="card test-card" onclick="selectTest('coding')">
+                        <div class="test-icon"><i class="fas fa-code"></i></div>
+                        <h3 class="text-xl mb-2">Coding</h3>
+                        <p class="text-sm mb-3">Programming code and syntax</p>
+                        <button class="btn-primary">Start</button>
+                    </div>
+                </div>
+                
+                <h2 class="text-2xl font-bold mb-4 mt-8">Take The Next Step</h2>
+                <div class="test-selection">
+                    <div class="card test-card" onclick="showSection('typing-practice')">
+                        <div class="test-icon"><i class="fas fa-keyboard"></i></div>
+                        <h3 class="text-xl mb-2">Train Typing Skills</h3>
+                        <p class="text-sm mb-3">What if you could type as fluently as you speak? Typing Trainer web typing lessons will get you there!</p>
+                    </div>
+                    
+                    <div class="card test-card" onclick="showSection('typing-challenge')">
+                        <div class="test-icon"><i class="fas fa-trophy"></i></div>
+                        <h3 class="text-xl mb-2">Typing Challenge</h3>
+                        <p class="text-sm mb-3">Can you name the progressively longer words (ordered typing challenge)?</p>
+                    </div>
+                    
+                    <div class="card test-card" onclick="startNumberChallenge()">
+                        <div class="test-icon"><i class="fas fa-sort-numeric-up"></i></div>
+                        <h3 class="text-xl mb-2">Type 1-100</h3>
+                        <p class="text-sm mb-3">Can you name the numbers 1-100 in under 1 minute?</p>
+                    </div>
+                </div>
+                
+                <h2 class="text-2xl font-bold mb-4 mt-8">What's New!</h2>
+                <div class="test-selection">
+                    <div class="card test-card" onclick="showSection('typing-certificate')">
+                        <div class="test-icon"><i class="fas fa-certificate"></i></div>
+                        <h3 class="text-xl mb-2">Typing Certificate Now Available Online</h3>
+                        <p class="text-sm mb-3">One of our most requested features is here! You can now take a 5-minute typing test with predefined English text and receive a printable certificate.</p>
+                    </div>
+                    
+                    <div class="card test-card" onclick="startSpeedChallenge()">
+                        <div class="test-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        <h3 class="text-xl mb-2">Typing Speed Challenge</h3>
+                        <p class="text-sm mb-3">Can you name the clues in order to test your typing speed?</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Typing Test Section -->
+            <section id="typing-test" class="section-content hidden">
+                <div class="card" id="test-setup">
+                    <h1 class="text-2xl font-bold mb-4">Typing Test</h1>
+                    <p class="mb-4">Test your typing speed and accuracy with our typing test.</p>
+                    
+                    <div class="mb-4">
+                        <label for="testDuration2" class="block mb-2">Test Duration:</label>
+                        <select id="testDuration2" class="w-full p-2 border rounded">
+                            <option value="1">1 Minute</option>
+                            <option value="2">2 Minutes</option>
+                            <option value="5">5 Minutes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="textDifficulty2" class="block mb-2">Text Difficulty:</label>
+                        <select id="textDifficulty2" class="w-full p-2 border rounded">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    
+                    <button onclick="startTypingTest()" class="btn-primary">Start Test</button>
+                </div>
+                
+                <div id="test-interface" class="card hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <div>
+                            <span class="text-xl font-bold" id="timer">01:00</span>
+                        </div>
+                        <div>
+                            <button onclick="resetTest()" class="btn-primary">Reset</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded mb-4" id="text-display">
+                        <p id="target-text" class="text-lg leading-relaxed"></p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <textarea 
+                            id="typing-input" 
+                            class="w-full p-4 border rounded text-lg" 
+                            placeholder="Start typing here..." 
+                            rows="5"
+                            autocomplete="off" 
+                            autocorrect="off" 
+                            autocapitalize="off" 
+                            spellcheck="false"
+                            disabled
+                        ></textarea>
+                    </div>
+                    
+                    <div class="flex justify-between flex-wrap">
+                        <div class="mr-4 mb-2">
+                            <span class="text-sm">WPM:</span>
+                            <span id="wpm-counter" class="font-bold">0</span>
+                        </div>
+                        <div class="mr-4 mb-2">
+                            <span class="text-sm">Accuracy:</span>
+                            <span id="accuracy-counter" class="font-bold">0%</span>
+                        </div>
+                        <div class="mr-4 mb-2">
+                            <span class="text-sm">Errors:</span>
+                            <span id="error-counter" class="font-bold">0</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-sm">Characters:</span>
+                            <span id="char-counter" class="font-bold">0/0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="test-results" class="card hidden">
+                    <h1 class="text-2xl font-bold mb-4">Your Test Results</h1>
+                    
+                    <div class="flex flex-col md:flex-row justify-between mb-6">
+                        <div class="flex-1 mb-4 md:mb-0 md:mr-4">
+                            <div class="text-center">
+                                <svg class="mx-auto" width="120" height="120" viewBox="0 0 120 120">
+                                    <circle class="progress-ring-bg" cx="60" cy="60" r="54" fill="none" stroke="#e6e6e6" stroke-width="12"></circle>
+                                    <circle id="wpm-ring" class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#4CAF50" stroke-width="12" stroke-dasharray="339.29" stroke-dashoffset="339.29"></circle>
+                                    <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" font-size="20" font-weight="bold" id="wpm-text">0</text>
+                                    <text x="60" y="80" text-anchor="middle" dominant-baseline="middle" font-size="14">WPM</text>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1 mb-4 md:mb-0 md:mr-4">
+                            <div class="text-center">
+                                <svg class="mx-auto" width="120" height="120" viewBox="0 0 120 120">
+                                    <circle class="progress-ring-bg" cx="60" cy="60" r="54" fill="none" stroke="#e6e6e6" stroke-width="12"></circle>
+                                    <circle id="accuracy-ring" class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#2196F3" stroke-width="12" stroke-dasharray="339.29" stroke-dashoffset="339.29"></circle>
+                                    <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" font-size="20" font-weight="bold" id="accuracy-text">0%</text>
+                                    <text x="60" y="80" text-anchor="middle" dominant-baseline="middle" font-size="14">Accuracy</text>
+                                </svg>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1">
+                            <div class="text-center">
+                                <svg class="mx-auto" width="120" height="120" viewBox="0 0 120 120">
+                                    <circle class="progress-ring-bg" cx="60" cy="60" r="54" fill="none" stroke="#e6e6e6" stroke-width="12"></circle>
+                                    <circle id="score-ring" class="progress-ring" cx="60" cy="60" r="54" fill="none" stroke="#FF9800" stroke-width="12" stroke-dasharray="339.29" stroke-dashoffset="339.29"></circle>
+                                    <text x="60" y="60" text-anchor="middle" dominant-baseline="middle" font-size="20" font-weight="bold" id="score-text">0</text>
+                                    <text x="60" y="80" text-anchor="middle" dominant-baseline="middle" font-size="14">Score</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold mb-2">Detailed Statistics</h2>
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <div>
+                                    <p class="text-sm">Raw Speed:</p>
+                                    <p class="font-bold" id="raw-speed">0 WPM</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm">Adjusted Speed:</p>
+                                    <p class="font-bold" id="adjusted-speed">0 WPM</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm">Accuracy:</p>
+                                    <p class="font-bold" id="final-accuracy">0%</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm">Total Time:</p>
+                                    <p class="font-bold" id="total-time">0 seconds</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm">Characters Typed:</p>
+                                    <p class="font-bold" id="chars-typed">0</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm">Correct Characters:</p>
+                                    <p class="font-bold" id="correct-chars">0</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm">Error Characters:</p>
+                                    <p class="font-bold" id="error-chars">0</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm">Words Typed:</p>
+                                    <p class="font-bold" id="words-typed">0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold mb-2">Problematic Keys</h2>
+                        <div id="keyboard-heatmap" class="bg-gray-100 dark:bg-gray-700 p-4 rounded text-center"></div>
+                    </div>
+                    
+                    <div class="flex flex-wrap justify-center space-x-2">
+                        <button onclick="resetTest()" class="btn-primary mb-2">Try Again</button>
+                        <button onclick="showCertificate()" class="btn-primary mb-2">Get Certificate</button>
+                        <button onclick="showSection('home')" class="btn-primary mb-2">Back to Home</button>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Typing Practice Section -->
+            <section id="typing-practice" class="section-content hidden">
+                <div class="card">
+                    <h1 class="text-2xl font-bold mb-4">Typing Practice</h1>
+                    <p class="mb-4">Improve your typing skills with targeted practice exercises.</p>
+                    
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold mb-2">Basic Exercises</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Home Row</h3>
+                                <p class="text-sm mb-3">Master the home row keys (asdf jkl;)</p>
+                                <button onclick="startPractice('home-row')" class="btn-primary">Start</button>
+                            </div>
+                            
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Top Row</h3>
+                                <p class="text-sm mb-3">Practice with the top row keys (qwert yuiop)</p>
+                                <button onclick="startPractice('top-row')" class="btn-primary">Start</button>
+                            </div>
+                            
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Bottom Row</h3>
+                                <p class="text-sm mb-3">Practice with the bottom row keys (zxcvb nm,.)</p>
+                                <button onclick="startPractice('bottom-row')" class="btn-primary">Start</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold mb-2">Specialized Practice</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Numbers & Symbols</h3>
+                                <p class="text-sm mb-3">Master numbers and special characters</p>
+                                <button onclick="startPractice('numbers-symbols')" class="btn-primary">Start</button>
+                            </div>
+                            
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Common Words</h3>
+                                <p class="text-sm mb-3">Practice with the most frequently used words</p>
+                                <button onclick="startPractice('common-words')" class="btn-primary">Start</button>
+                            </div>
+                            
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Difficult Combinations</h3>
+                                <p class="text-sm mb-3">Master challenging letter combinations</p>
+                                <button onclick="startPractice('difficult-combos')" class="btn-primary">Start</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="practice-interface" class="hidden">
+                        <h2 class="text-xl font-bold mb-2" id="practice-title">Practice Exercise</h2>
+                        <p class="mb-4" id="practice-description">Follow the instructions below to complete this exercise.</p>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded mb-4">
+                            <p id="practice-text" class="text-lg leading-relaxed"></p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <textarea 
+                                id="practice-input" 
+                                class="w-full p-4 border rounded text-lg" 
+                                placeholder="Start typing here..." 
+                                rows="3"
+                                autocomplete="off" 
+                                autocorrect="off" 
+                                autocapitalize="off" 
+                                spellcheck="false"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <div>
+                                <span class="text-sm">Accuracy:</span>
+                                <span id="practice-accuracy" class="font-bold">0%</span>
+                            </div>
+                            <div>
+                                <button onclick="resetPractice()" class="btn-primary">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Typing Lessons Section -->
+            <section id="typing-lessons" class="section-content hidden">
+                <div class="card">
+                    <h1 class="text-2xl font-bold mb-4">Typing Lessons</h1>
+                    <p class="mb-4">Learn to type with our comprehensive typing lessons.</p>
+                    
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold mb-2">Beginner Lessons</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Lesson 1: Home Row</h3>
+                                <p class="text-sm mb-3">Learn proper finger placement and master the home row keys.</p>
+                                <div class="progress-bar bg-gray-200 rounded h-2 mb-3">
+                                    <div class="bg-blue-500 h-2 rounded" style="width: 0%"></div>
+                                </div>
+                                <button onclick="startLesson(1)" class="btn-primary">Start Lesson</button>
+                            </div>
+                            
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Lesson 2: Top Row</h3>
+                                <p class="text-sm mb-3">Expand your reach to the top row keys.</p>
+                                <div class="progress-bar bg-gray-200 rounded h-2 mb-3">
+                                    <div class="bg-blue-500 h-2 rounded" style="width: 0%"></div>
+                                </div>
+                                <button onclick="startLesson(2)" class="btn-primary">Start Lesson</button>
+                            </div>
+                            
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Lesson 3: Bottom Row</h3>
+                                <p class="text-sm mb-3">Master the bottom row keys.</p>
+                                <div class="progress-bar bg-gray-200 rounded h-2 mb-3">
+                                    <div class="bg-blue-500 h-2 rounded" style="width: 0%"></div>
+                                </div>
+                                <button onclick="startLesson(3)" class="btn-primary">Start Lesson</button>
+                            </div>
+                            
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Lesson 4: Capital Letters</h3>
+                                <p class="text-sm mb-3">Learn to use the shift key for capital letters.</p>
+                                <div class="progress-bar bg-gray-200 rounded h-2 mb-3">
+                                    <div class="bg-blue-500 h-2 rounded" style="width: 0%"></div>
+                                </div>
+                                <button onclick="startLesson(4)" class="btn-primary">Start Lesson</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold mb-2">Intermediate Lessons</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Lesson 5: Numbers</h3>
+                                <p class="text-sm mb-3">Master the number row for fast numeric data entry.</p>
+                                <div class="progress-bar bg-gray-200 rounded h-2 mb-3">
+                                    <div class="bg-blue-500 h-2 rounded" style="width: 0%"></div>
+                                </div>
+                                <button onclick="startLesson(5)" class="btn-primary">Start Lesson</button>
+                            </div>
+                            
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Lesson 6: Symbols</h3>
+                                <p class="text-sm mb-3">Learn to type common symbols and punctuation.</p>
+                                <div class="progress-bar bg-gray-200 rounded h-2 mb-3">
+                                    <div class="bg-blue-500 h-2 rounded" style="width: 0%"></div>
+                                </div>
+                                <button onclick="startLesson(6)" class="btn-primary">Start Lesson</button>
+                            </div>
+                            
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Lesson 7: Speed Building</h3>
+                                <p class="text-sm mb-3">Exercises to increase your typing speed.</p>
+                                <div class="progress-bar bg-gray-200 rounded h-2 mb-3">
+                                    <div class="bg-blue-500 h-2 rounded" style="width: 0%"></div>
+                                </div>
+                                <button onclick="startLesson(7)" class="btn-primary">Start Lesson</button>
+                            </div>
+                            
+                            <div class="card p-4">
+                                <h3 class="font-bold mb-2">Lesson 8: Accuracy Training</h3>
+                                <p class="text-sm mb-3">Focus on precision and error reduction.</p>
+                                <div class="progress-bar bg-gray-200 rounded h-2 mb-3">
+                                    <div class="bg-blue-500 h-2 rounded" style="width: 0%"></div>
+                                </div>
+                                <button onclick="startLesson(8)" class="btn-primary">Start Lesson</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="lesson-interface" class="hidden">
+                        <h2 class="text-xl font-bold mb-2" id="lesson-title">Lesson Title</h2>
+                        <p class="mb-4" id="lesson-description">Lesson description will appear here.</p>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded mb-4">
+                            <div id="keyboard-display" class="text-center mb-4">
+                                <!-- Keyboard visualization will be inserted here by JavaScript -->
+                            </div>
+                            <p id="lesson-text" class="text-lg leading-relaxed"></p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <textarea 
+                                id="lesson-input" 
+                                class="w-full p-4 border rounded text-lg" 
+                                placeholder="Start typing here..." 
+                                rows="3"
+                                autocomplete="off" 
+                                autocorrect="off" 
+                                autocapitalize="off" 
+                                spellcheck="false"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="flex justify-between mb-4">
+                            <div>
+                                <span class="text-sm">Progress:</span>
+                                <span id="lesson-progress" class="font-bold">0%</span>
+                            </div>
+                            <div>
+                                <span class="text-sm">Accuracy:</span>
+                                <span id="lesson-accuracy" class="font-bold">0%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <button onclick="previousLessonStep()" class="btn-primary" id="prev-lesson-btn" disabled>Previous</button>
+                            <button onclick="resetLesson()" class="btn-primary">Reset</button>
+                            <button onclick="nextLessonStep()" class="btn-primary" id="next-lesson-btn" disabled>Next</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Typing Games Section -->
+            <section id="typing-games" class="section-content hidden">
+                <div class="card">
+                    <h1 class="text-2xl font-bold mb-4">Typing Games</h1>
+                    <p class="mb-4">Have fun while improving your typing skills with these interactive games.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="card p-4">
+                            <h3 class="font-bold text-xl mb-2">Word Racer</h3>
+                            <div class="mb-3 h-40 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <i class="fas fa-car text-4xl text-blue-500"></i>
+                            </div>
+                            <p class="text-sm mb-3">Type words quickly to make your car race to the finish line!</p>
+                            <button onclick="startGame('word-racer')" class="btn-primary w-full">Play Now</button>
+                        </div>
+                        
+                        <div class="card p-4">
+                            <h3 class="font-bold text-xl mb-2">Falling Words</h3>
+                            <div class="mb-3 h-40 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <i class="fas fa-sort-down text-4xl text-green-500"></i>
+                            </div>
+                            <p class="text-sm mb-3">Type the falling words before they hit the bottom!</p>
+                            <button onclick="startGame('falling-words')" class="btn-primary w-full">Play Now</button>
+                        </div>
+                        
+                        <div class="card p-4">
+                            <h3 class="font-bold text-xl mb-2">Typo Hunter</h3>
+                            <div class="mb-3 h-40 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <i class="fas fa-search text-4xl text-red-500"></i>
+                            </div>
+                            <p class="text-sm mb-3">Find and correct typos in text as quickly as possible!</p>
+                            <button onclick="startGame('typo-hunter')" class="btn-primary w-full">Play Now</button>
+                        </div>
+                        
+                        <div class="card p-4">
+                            <h3 class="font-bold text-xl mb-2">Bigram Blitz</h3>
+                            <div class="mb-3 h-40 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <i class="fas fa-bolt text-4xl text-yellow-500"></i>
+                            </div>
+                            <p class="text-sm mb-3">Practice common letter combinations to improve typing fluency!</p>
+                            <button onclick="startGame('bigram-blitz')" class="btn-primary w-full">Play Now</button>
+                        </div>
+                        
+                        <div class="card p-4">
+                            <h3 class="font-bold text-xl mb-2">Type Defense</h3>
+                            <div class="mb-3 h-40 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <i class="fas fa-shield-alt text-4xl text-purple-500"></i>
+                            </div>
+                            <p class="text-sm mb-3">Defend your base by typing words to destroy incoming enemies!</p>
+                            <button onclick="startGame('type-defense')" class="btn-primary w-full">Play Now</button>
+                        </div>
+                        
+                        <div class="card p-4">
+                            <h3 class="font-bold text-xl mb-2">Word Builder</h3>
+                            <div class="mb-3 h-40 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <i class="fas fa-th text-4xl text-orange-500"></i>
+                            </div>
+                            <p class="text-sm mb-3">Build as many words as possible from a set of letters!</p>
+                            <button onclick="startGame('word-builder')" class="btn-primary w-full">Play Now</button>
+                        </div>
+                    </div>
+                    
+                    <div id="game-interface" class="mt-6 hidden">
+                        <h2 class="text-xl font-bold mb-2" id="game-title">Game Title</h2>
+                        <p class="mb-4" id="game-description">Game description will appear here.</p>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded mb-4 h-64 relative" id="game-display">
+                            <!-- Game elements will be displayed here -->
+                        </div>
+                        
+                        <div class="mb-4">
+                            <input 
+                                type="text" 
+                                id="game-input" 
+                                class="w-full p-4 border rounded text-lg" 
+                                placeholder="Type here..." 
+                                autocomplete="off" 
+                                autocorrect="off" 
+                                autocapitalize="off" 
+                                spellcheck="false"
+                            />
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <div>
+                                <span class="text-sm">Score:</span>
+                                <span id="game-score" class="font-bold">0</span>
+                            </div>
+                            <div>
+                                <span class="text-sm">Time:</span>
+                                <span id="game-timer" class="font-bold">60</span>
+                            </div>
+                            <div>
+                                <button onclick="resetGame()" class="btn-primary">Reset Game</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Typing Challenge Section -->
+            <section id="typing-challenge" class="section-content hidden">
+                <div class="card">
+                    <h1 class="text-2xl font-bold mb-4">Typing Challenges</h1>
+                    <p class="mb-4">Test your typing skills with these special challenges.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="card p-4">
+                            <h3 class="font-bold text-xl mb-2">Progressive Word Challenge</h3>
+                            <div class="mb-3 h-40 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <i class="fas fa-sort-amount-up text-4xl text-blue-500"></i>
+                            </div>
+                            <p class="text-sm mb-3">Can you name the progressively longer words (ordered typing challenge)?</p>
+                            <button onclick="startChallenge('progressive-words')" class="btn-primary w-full">Start Challenge</button>
+                        </div>
+                        
+                        <div class="card p-4">
+                            <h3 class="font-bold text-xl mb-2">Type 1-100 Challenge</h3>
+                            <div class="mb-3 h-40 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <i class="fas fa-sort-numeric-up text-4xl text-green-500"></i>
+                            </div>
+                            <p class="text-sm mb-3">Can you type the numbers 1-100 in order in under 1 minute?</p>
+                            <button onclick="startChallenge('numbers-1-100')" class="btn-primary w-full">Start Challenge</button>
+                        </div>
+                        
+                        <div class="card p-4">
+                            <h3 class="font-bold text-xl mb-2">Typing Speed Challenge</h3>
+                            <div class="mb-3 h-40 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <i class="fas fa-tachometer-alt text-4xl text-red-500"></i>
+                            </div>
+                            <p class="text-sm mb-3">Can you name the clues in order to test your typing speed?</p>
+                            <button onclick="startChallenge('speed-challenge')" class="btn-primary w-full">Start Challenge</button>
+                        </div>
+                        
+                        <div class="card p-4">
+                            <h3 class="font-bold text-xl mb-2">Pangram Challenge</h3>
+                            <div class="mb-3 h-40 bg-gray-200 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <i class="fas fa-font text-4xl text-purple-500"></i>
+                            </div>
+                            <p class="text-sm mb-3">Type sentences that contain every letter of the alphabet.</p>
+                            <button onclick="startChallenge('pangram')" class="btn-primary w-full">Start Challenge</button>
+                        </div>
+                    </div>
+                    
+                    <div id="challenge-interface" class="mt-6 hidden">
+                        <h2 class="text-xl font-bold mb-2" id="challenge-title">Challenge Title</h2>
+                        <p class="mb-4" id="challenge-description">Challenge description will appear here.</p>
+                        
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <span class="text-sm">Time Remaining:</span>
+                                <span id="challenge-timer" class="font-bold">60</span>
+                            </div>
+                            <div>
+                                <span class="text-sm">Progress:</span>
+                                <span id="challenge-progress" class="font-bold">0/0</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded mb-4">
+                            <p id="challenge-text" class="text-lg leading-relaxed"></p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <input 
+                                type="text" 
+                                id="challenge-input" 
+                                class="w-full p-4 border rounded text-lg" 
+                                placeholder="Type here..." 
+                                autocomplete="off" 
+                                autocorrect="off" 
+                                autocapitalize="off" 
+                                spellcheck="false"
+                            />
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <div>
+                                <button onclick="resetChallenge()" class="btn-primary">Reset Challenge</button>
+                            </div>
+                            <div>
+                                <button onclick="showSection('typing-challenge')" class="btn-primary">Back to Challenges</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="challenge-results" class="mt-6 hidden">
+                        <h2 class="text-xl font-bold mb-2">Challenge Complete!</h2>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded mb-4">
+                            <p class="mb-4" id="challenge-results-message">Your results will appear here.</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                                <div>
+                                    <p class="text-sm">Time Used:</p>
+                                    <p class="font-bold text-2xl" id="challenge-time-used">0s</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm">Accuracy:</p>
+                                    <p class="font-bold text-2xl" id="challenge-accuracy-result">0%</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm">Score:</p>
+                                    <p class="font-bold text-2xl" id="challenge-score">0</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <div>
+                                <button onclick="resetChallenge()" class="btn-primary">Try Again</button>
+                            </div>
+                            <div>
+                                <button onclick="showSection('typing-challenge')" class="btn-primary">Back to Challenges</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Typing Certificate Section -->
+            <section id="typing-certificate" class="section-content hidden">
+                <div class="card">
+                    <h1 class="text-2xl font-bold mb-4">Typing Certificate</h1>
+                    <p class="mb-4">Take a 5-minute typing test and receive a professional typing certificate.</p>
+                    
+                    <div class="mb-6">
+                        <h2 class="text-xl font-bold mb-2">Certificate Test</h2>
+                        <p class="mb-4">Take a 5-minute typing test with predefined English text. After completing the test, you'll receive a printable certificate with your typing speed and accuracy.</p>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded mb-4">
+                            <h3 class="font-bold mb-2">Certificate Requirements:</h3>
+                            <ul class="list-disc list-inside">
+                                <li>Complete a 5-minute typing test</li>
+                                <li>Type the provided text exactly as shown</li>
+                                <li>Maintain at least 95% accuracy</li>
+                                <li>Achieve a minimum speed of 30 WPM</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="text-center">
+                            <button onclick="startCertificateTest()" class="btn-primary px-8 py-3">Start Certificate Test</button>
+                        </div>
+                    </div>
+                    
+                    <div id="certificate-test" class="hidden">
+                        <div class="flex justify-between items-center mb-4">
+                            <div>
+                                <span class="text-xl font-bold" id="certificate-timer">05:00</span>
+                            </div>
+                            <div>
+                                <button onclick="resetCertificateTest()" class="btn-primary">Reset</button>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded mb-4">
+                            <p id="certificate-text" class="text-lg leading-relaxed"></p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <textarea 
+                                id="certificate-input" 
+                                class="w-full p-4 border rounded text-lg" 
+                                placeholder="Start typing here..." 
+                                rows="5"
+                                autocomplete="off" 
+                                autocorrect="off" 
+                                autocapitalize="off" 
+                                spellcheck="false"
+                            ></textarea>
+                        </div>
+                        
+                        <div class="flex justify-between flex-wrap">
+                            <div class="mr-4 mb-2">
+                                <span class="text-sm">WPM:</span>
+                                <span id="certificate-wpm" class="font-bold">0</span>
+                            </div>
+                            <div class="mr-4 mb-2">
+                                <span class="text-sm">Accuracy:</span>
+                                <span id="certificate-accuracy" class="font-bold">0%</span>
+                            </div>
+                            <div class="mb-2">
+                                <span class="text-sm">Progress:</span>
+                                <span id="certificate-progress" class="font-bold">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="certificate-result" class="hidden">
+                        <div class="certificate mb-6" id="certificate-display">
+                            <div class="text-center mb-6">
+                                <h2 class="text-3xl font-bold mb-1">Typing Skills Certificate</h2>
+                                <p class="text-lg">TypeTest.com</p>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <p class="text-lg">This certifies that</p>
+                                <p class="text-2xl font-bold my-2" id="certificate-name">Typing Test User</p>
+                                <p class="text-lg">has demonstrated typing proficiency with:</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                <div class="text-center">
+                                    <p class="text-lg">Typing Speed</p>
+                                    <p class="text-3xl font-bold" id="certificate-final-wpm">0 WPM</p>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-lg">Accuracy</p>
+                                    <p class="text-3xl font-bold" id="certificate-final-accuracy">0%</p>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-6">
+                                <p class="text-lg">Based on a 5-minute typing test completed on <span id="certificate-date">January 1, 2023</span></p>
+                            </div>
+                            
+                            <div class="certificate-seal">
+                                <i class="fas fa-award text-3xl"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label for="user-name" class="block mb-2">Enter your name for the certificate:</label>
+                            <input type="text" id="user-name" class="w-full p-2 border rounded" placeholder="Your Name">
+                        </div>
+                        
+                        <div class="flex justify-between">
+                            <button onclick="updateCertificate()" class="btn-primary">Update Name</button>
+                            <button onclick="printCertificate()" class="btn-primary">Print Certificate</button>
+                            <button onclick="showSection('typing-certificate')" class="btn-primary">Back</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // Constants and Variables
+        const sections = [
+            'home', 'typing-test', 'typing-practice', 'typing-lessons', 
+            'typing-games', 'typing-challenge', 'typing-certificate'
+        ];
+        
+        let currentSection = 'home';
+        let testActive = false;
+        let testStartTime = 0;
+        let testEndTime = 0;
+        let testDuration = 60; // in seconds
+        let timerInterval = null;
+        let wpm = 0;
+        let accuracy = 0;
+        let score = 0;
+        let errorCount = 0;
+        let characterCount = 0;
+        let correctCharacterCount = 0;
+        let textSamples = {
+            easy: [
+                "The quick brown fox jumps over the lazy dog. This simple sentence contains every letter of the English alphabet. It is commonly used to test typing speed and accuracy.",
+                "Typing is a skill that improves with practice. Regular typing exercises can help increase your speed and accuracy. Most people can type faster than they can write by hand.",
+                "Learning to touch type can save you hours of time. When you don't have to look at the keyboard, you can focus on your work. Touch typing is an essential skill in today's digital world."
+            ],
+            medium: [
+                "The ability to type quickly and accurately is increasingly important in our digital age. Whether you're writing emails, coding applications, or creating documents, efficient typing can significantly boost your productivity.",
+                "Developing good typing habits early can prevent repetitive strain injuries later. Proper posture, keyboard positioning, and regular breaks are essential components of ergonomic typing practices.",
+                "Proficient typists typically achieve speeds of 60 to 70 words per minute, though professional typists may reach 90 words per minute or higher. Accuracy is equally important as raw speed."
+            ],
+            hard: [
+                "The juxtaposition of contemporary technological advancements with antiquated methodologies creates a paradoxical environment where efficiency is simultaneously enhanced and hindered by organizational resistance to adaptation.",
+                "Psycholinguistic research has demonstrated that experienced typists develop automaticity, wherein the cognitive load of typing individual characters diminishes, allowing for the simultaneous planning of subsequent words and phrases.",
+                "The acquisition of transcription abilities necessitates not merely manual dexterity but furthermore an intricate synchronization between visual perception, cognitive processing, and neuromuscular response systems."
+            ]
+        };
+        
+        // Practice Texts
+        const practiceTexts = {
+            'home-row': "asdf jkl; asdf jkl; asdf jkl; fjdk slaf jdka slf; fjdk slaf jdka slf; fjdk slaf jdka slf;",
+            'top-row': "qwert yuiop qwert yuiop qwert yuiop rewq poiu rewq poiu rewq poiu",
+            'bottom-row': "zxcvb nm,. zxcvb nm,. zxcvb nm,. bvcxz .,mnb bvcxz .,mnb bvcxz .,mnb",
+            'numbers-symbols': "1234567890 !@#$%^&*() 1234567890 !@#$%^&*() 1234567890 !@#$(^&*()",
+            'common-words': "the of and to in a is that it was for with he as on are by this from at his an have were they but had",
+            'difficult-combos': "th er on an re he in ed nd ha at en es of or nt ea ti to it st io le is ou ar as de rt ve"
+        };
+
+        // Lesson content
+        const lessons = [
+            {
+                title: "Home Row Basics",
+                description: "Learn the home row keys: A, S, D, F, J, K, L, ;",
+                steps: [
+                    { text: "fff jjj fff jjj fff jjj fff jjj", instruction: "Place your index fingers on F and J" },
+                    { text: "asdf jkl; asdf jkl; asdf jkl;", instruction: "Use the correct finger for each key" },
+                    { text: "dad fad sad lad jak ask flask", instruction: "Practice words using home row keys" }
+                ]
+            },
+            // More lessons would be defined here
+        ];
+        
+        // Challenge content
+        const challenges = {
+            'progressive-words': {
+                title: "Progressive Word Challenge",
+                description: "Type progressively longer words as quickly as possible.",
+                words: ["a", "an", "and", "band", "brand", "brands", "branded", "branding", "brandings"],
+                timeLimit: 60
+            },
+            'numbers-1-100': {
+                title: "Type 1-100 Challenge",
+                description: "Can you type the numbers 1-100 in order in under 1 minute?",
+                numbers: Array.from({ length: 100 }, (_, i) => (i + 1).toString()),
+                timeLimit: 60
+            },
+            'speed-challenge': {
+                title: "Typing Speed Challenge",
+                description: "Type the following words as quickly as possible.",
+                words: ["quick", "fast", "speed", "rapid", "swift", "nimble", "agile", "fleet", "brisk", "hasty"],
+                timeLimit: 30
+            },
+            'pangram': {
+                title: "Pangram Challenge",
+                description: "Type these sentences that contain every letter of the alphabet.",
+                sentences: [
+                    "The quick brown fox jumps over the lazy dog.",
+                    "Pack my box with five dozen liquor jugs.",
+                    "Sphinx of black quartz, judge my vow."
+                ],
+                timeLimit: 90
+            }
+        };
+        
+        // Certificate test content
+        const certificateText = "The ability to type quickly and accurately is an essential skill in today's digital world. When you can type without looking at the keyboard, you can focus on your work and be more productive. Regular practice can help you develop muscle memory and improve your typing speed and accuracy over time. Many employers now consider typing proficiency a basic job requirement, especially for positions that involve computer work. Developing good typing habits early can prevent repetitive strain injuries later. Proper posture, keyboard positioning, and regular breaks are essential components of ergonomic typing practices. Proficient typists typically achieve speeds of 60 to 70 words per minute, though professional typists may reach 90 words per minute or higher. Accuracy is equally important as raw speed, as errors can lead to miscommunication and lost time spent on corrections.";
+        
+        // Game definitions
+        const games = {
+            'word-racer': {
+                title: "Word Racer",
+                description: "Type words quickly to make your car race to the finish line!",
+                words: ["race", "speed", "fast", "drive", "car", "wheel", "road", "highway", "vehicle", "motor"],
+                timeLimit: 60
+            },
+            // Other games would be defined here
+        };
+        
+        // Utility Functions
+        function showSection(sectionId) {
+            sections.forEach(section => {
+                document.getElementById(section).classList.add('hidden');
+                document.querySelector(`.nav-item[onclick="showSection('${section}')"]`).classList.remove('active');
+            });
+            
+            document.getElementById(sectionId).classList.remove('hidden');
+            document.querySelector(`.nav-item[onclick="showSection('${sectionId}')"]`).classList.add('active');
+            currentSection = sectionId;
+        }
+        
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function calculateWPM(chars, timeInSeconds) {
+            // Assuming 5 characters per word (standard measurement)
+            return Math.round((chars / 5) * (60 / timeInSeconds));
+        }
+        
+        function calculateAccuracy(correct, total) {
+            if (total === 0) return 100;
+            return Math.round((correct / total) * 100);
+        }
+        
+        function getRandomItem(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+        
+        // Typing Test Functions
+        function startTypingTest() {
+            // Get test parameters
+            const durationSelectId = currentSection === 'home' ? 'testDuration' : 'testDuration2';
+            const difficultySelectId = currentSection === 'home' ? 'textDifficulty' : 'textDifficulty2';
+            
+            testDuration = parseInt(document.getElementById(durationSelectId).value) * 60;
+            const difficulty = document.getElementById(difficultySelectId).value;
+            
+            // Hide test setup, show test interface
+            if (currentSection === 'home') {
+                showSection('typing-test');
+            }
+            
+            document.getElementById('test-setup').classList.add('hidden');
+            document.getElementById('test-interface').classList.remove('hidden');
+            document.getElementById('test-results').classList.add('hidden');
+            
+            // Set up the test
+            const targetText = getRandomItem(textSamples[difficulty]);
+            document.getElementById('target-text').textContent = targetText;
+            document.getElementById('typing-input').value = '';
+            document.getElementById('typing-input').disabled = false;
+            document.getElementById('typing-input').focus();
+            
+            // Reset counters
+            wpm = 0;
+            accuracy = 100;
+            errorCount = 0;
+            characterCount = 0;
+            correctCharacterCount = 0;
+            
+            // Update display
+            document.getElementById('wpm-counter').textContent = wpm;
+            document.getElementById('accuracy-counter').textContent = `${accuracy}%`;
+            document.getElementById('error-counter').textContent = errorCount;
+            document.getElementById('char-counter').textContent = `0/${targetText.length}`;
+            document.getElementById('timer').textContent = formatTime(testDuration);
+            
+            // Start the timer
+            testStartTime = Date.now();
+            testActive = true;
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(updateTestTimer, 1000);
+            
+            // Set up input handler
+            document.getElementById('typing-input').oninput = updateTestProgress;
+        }
+        
+        function updateTestTimer() {
+            if (!testActive) return;
+            
+            const elapsedSeconds = Math.floor((Date.now() - testStartTime) / 1000);
+            const remainingSeconds = testDuration - elapsedSeconds;
+            
+            if (remainingSeconds <= 0) {
+                endTest();
+                return;
+            }
+            
+            document.getElementById('timer').textContent = formatTime(remainingSeconds);
+            
+            // Update WPM every few seconds
+            if (elapsedSeconds % 3 === 0) {
+                wpm = calculateWPM(correctCharacterCount, elapsedSeconds);
+                document.getElementById('wpm-counter').textContent = wpm;
+            }
+        }
+        
+        function updateTestProgress() {
+            if (!testActive) return;
+            
+            const input = document.getElementById('typing-input').value;
+            const targetText = document.getElementById('target-text').textContent;
+            
+            characterCount = input.length;
+            correctCharacterCount = 0;
+            errorCount = 0;
+            
+            // Compare input with target text
+            for (let i = 0; i < input.length; i++) {
+                if (i >= targetText.length) {
+                    errorCount++;
+                } else if (input[i] === targetText[i]) {
+                    correctCharacterCount++;
+                } else {
+                    errorCount++;
+                }
+            }
+            
+            // Update counters
+            accuracy = calculateAccuracy(correctCharacterCount, characterCount);
+            document.getElementById('accuracy-counter').textContent = `${accuracy}%`;
+            document.getElementById('error-counter').textContent = errorCount;
+            document.getElementById('char-counter').textContent = `${characterCount}/${targetText.length}`;
+            
+            // End test if all text is typed
+            if (input.length >= targetText.length) {
+                endTest();
+            }
+        }
+        
+        function endTest() {
+            testActive = false;
+            clearInterval(timerInterval);
+            
+            testEndTime = Date.now();
+            const elapsedSeconds = Math.max(1, Math.floor((testEndTime - testStartTime) / 1000));
+            
+            // Calculate final statistics
+            wpm = calculateWPM(correctCharacterCount, elapsedSeconds);
+            const rawWpm = calculateWPM(characterCount, elapsedSeconds);
+            accuracy = calculateAccuracy(correctCharacterCount, characterCount);
+            score = Math.round(wpm * (accuracy / 100));
+            
+            // Disable input
+            document.getElementById('typing-input').disabled = true;
+            
+            // Show results
+            document.getElementById('test-interface').classList.add('hidden');
+            document.getElementById('test-results').classList.remove('hidden');
+            
+            // Update results display
+            document.getElementById('wpm-text').textContent = wpm;
+            document.getElementById('accuracy-text').textContent = `${accuracy}%`;
+            document.getElementById('score-text').textContent = score;
+            
+            // Update detailed statistics
+            document.getElementById('raw-speed').textContent = `${rawWpm} WPM`;
+            document.getElementById('adjusted-speed').textContent = `${wpm} WPM`;
+            document.getElementById('final-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('total-time').textContent = `${elapsedSeconds} seconds`;
+            document.getElementById('chars-typed').textContent = characterCount;
+            document.getElementById('correct-chars').textContent = correctCharacterCount;
+            document.getElementById('error-chars').textContent = errorCount;
+            document.getElementById('words-typed').textContent = Math.round(characterCount / 5);
+            
+            // Animate progress rings
+            const wpmCircle = document.getElementById('wpm-ring');
+            const accuracyCircle = document.getElementById('accuracy-ring');
+            const scoreCircle = document.getElementById('score-ring');
+            
+            const circumference = 339.29; // 2 * π * 54
+            
+            // WPM ring (max 120 WPM)
+            const wpmPercentage = Math.min(wpm / 120, 1);
+            wpmCircle.style.strokeDashoffset = circumference * (1 - wpmPercentage);
+            
+            // Accuracy ring
+            const accuracyPercentage = accuracy / 100;
+            accuracyCircle.style.strokeDashoffset = circumference * (1 - accuracyPercentage);
+            
+            // Score ring (max 120)
+            const scorePercentage = Math.min(score / 120, 1);
+            scoreCircle.style.strokeDashoffset = circumference * (1 - scorePercentage);
+            
+            // Generate keyboard heatmap
+            generateKeyboardHeatmap();
+        }
+        
+        function resetTest() {
+            testActive = false;
+            clearInterval(timerInterval);
+            
+            document.getElementById('test-setup').classList.remove('hidden');
+            document.getElementById('test-interface').classList.add('hidden');
+            document.getElementById('test-results').classList.add('hidden');
+        }
+        
+        function generateKeyboardHeatmap() {
+            // Simple keyboard layout
+            const keyboardLayout = [
+                ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+                ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';'],
+                ['z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/']
+            ];
+            
+            const keyboardHeatmap = document.getElementById('keyboard-heatmap');
+            keyboardHeatmap.innerHTML = '';
+            
+            // In a real implementation, we would track errors per key
+            // For this demo, we'll just show a random keyboard with some problem keys
+            const problemKeys = ['r', 'y', 'p', 'v', 'n'];
+            
+            keyboardLayout.forEach(row => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'flex justify-center mb-2';
+                
+                row.forEach(key => {
+                    const keyDiv = document.createElement('div');
+                    keyDiv.className = `keyboard-key ${problemKeys.includes(key) ? 'problem' : ''}`;
+                    keyDiv.textContent = key;
+                    rowDiv.appendChild(keyDiv);
+                });
+                
+                keyboardHeatmap.appendChild(rowDiv);
+            });
+        }
+        
+        function showCertificate() {
+            showSection('typing-certificate');
+        }
+        
+        // Practice Functions
+        function startPractice(practiceType) {
+            const practiceText = practiceTexts[practiceType];
+            const titleMap = {
+                'home-row': 'Home Row Practice',
+                'top-row': 'Top Row Practice',
+                'bottom-row': 'Bottom Row Practice',
+                'numbers-symbols': 'Numbers & Symbols Practice',
+                'common-words': 'Common Words Practice',
+                'difficult-combos': 'Difficult Combinations Practice'
+            };
+            
+            document.getElementById('practice-title').textContent = titleMap[practiceType];
+            document.getElementById('practice-description').textContent = `Type the following text to practice ${titleMap[practiceType].toLowerCase()}:`;
+            document.getElementById('practice-text').textContent = practiceText;
+            document.getElementById('practice-input').value = '';
+            document.getElementById('practice-accuracy').textContent = '0%';
+            
+            document.getElementById('practice-interface').classList.remove('hidden');
+            document.getElementById('practice-input').focus();
+            
+            document.getElementById('practice-input').oninput = updatePracticeProgress;
+        }
+        
+        function updatePracticeProgress() {
+            const input = document.getElementById('practice-input').value;
+            const targetText = document.getElementById('practice-text').textContent;
+            
+            let correctCount = 0;
+            
+            for (let i = 0; i < input.length; i++) {
+                if (i < targetText.length && input[i] === targetText[i]) {
+                    correctCount++;
+                }
+            }
+            
+            const accuracy = input.length > 0 ? Math.round((correctCount / input.length) * 100) : 0;
+            document.getElementById('practice-accuracy').textContent = `${accuracy}%`;
+        }
+        
+        function resetPractice() {
+            document.getElementById('practice-input').value = '';
+            document.getElementById('practice-accuracy').textContent = '0%';
+            document.getElementById('practice-input').focus();
+        }
+        
+        // Lesson Functions
+        let currentLesson = 0;
+        let currentStep = 0;
+        
+        function startLesson(lessonIndex) {
+            if (lessonIndex < 1 || lessonIndex > lessons.length) return;
+            
+            currentLesson = lessonIndex - 1;
+            currentStep = 0;
+            
+            const lesson = lessons[currentLesson];
+            
+            document.getElementById('lesson-title').textContent = lesson.title;
+            document.getElementById('lesson-description').textContent = lesson.description;
+            
+            updateLessonStep();
+            
+            document.getElementById('lesson-interface').classList.remove('hidden');
+            document.getElementById('lesson-input').focus();
+            
+            document.getElementById('lesson-input').oninput = updateLessonProgress;
+        }
+        
+        function updateLessonStep() {
+            const lesson = lessons[currentLesson];
+            const step = lesson.steps[currentStep];
+            
+            document.getElementById('lesson-text').textContent = step.text;
+            document.getElementById('lesson-input').value = '';
+            document.getElementById('lesson-accuracy').textContent = '0%';
+            document.getElementById('lesson-progress').textContent = `${currentStep + 1}/${lesson.steps.length}`;
+            
+            // Update button states
+            document.getElementById('prev-lesson-btn').disabled = currentStep === 0;
+            document.getElementById('next-lesson-btn').disabled = true;
+            
+            // Show keyboard visualization
+            updateKeyboardDisplay(step.text);
+        }
+        
+        function updateKeyboardDisplay(text) {
+            // This would show which keys to press next
+            const keyboardDisplay = document.getElementById('keyboard-display');
+            keyboardDisplay.innerHTML = '';
+            
+            // Simple implementation - just show the first few characters to type
+            const charsToShow = text.substring(0, 10);
+            const keyDisplay = document.createElement('div');
+            keyDisplay.className = 'flex justify-center';
+            
+            [...charsToShow].forEach(char => {
+                const keyDiv = document.createElement('div');
+                keyDiv.className = 'keyboard-key';
+                keyDiv.textContent = char === ' ' ? 'Space' : char;
+                keyDisplay.appendChild(keyDiv);
+            });
+            
+            keyboardDisplay.appendChild(keyDisplay);
+        }
+        
+        function updateLessonProgress() {
+            const input = document.getElementById('lesson-input').value;
+            const targetText = document.getElementById('lesson-text').textContent;
+            
+            let correctCount = 0;
+            
+            for (let i = 0; i < input.length; i++) {
+                if (i < targetText.length && input[i] === targetText[i]) {
+                    correctCount++;
+                }
+            }
+            
+            const accuracy = input.length > 0 ? Math.round((correctCount / input.length) * 100) : 0;
+            document.getElementById('lesson-accuracy').textContent = `${accuracy}%`;
+            
+            // Enable next button if completed with good accuracy
+            if (input.length >= targetText.length && accuracy >= 90) {
+                document.getElementById('next-lesson-btn').disabled = false;
+            } else {
+                document.getElementById('next-lesson-btn').disabled = true;
+            }
+        }
+        
+        function nextLessonStep() {
+            const lesson = lessons[currentLesson];
+            
+            if (currentStep < lesson.steps.length - 1) {
+                currentStep++;
+                updateLessonStep();
+                document.getElementById('lesson-input').focus();
+            }
+        }
+        
+        function previousLessonStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                updateLessonStep();
+                document.getElementById('lesson-input').focus();
+            }
+        }
+        
+        function resetLesson() {
+            updateLessonStep();
+            document.getElementById('lesson-input').focus();
+        }
+        
+        // Game Functions
+        let currentGame = '';
+        let gameTimer = 0;
+        let gameInterval = null;
+        let gameScore = 0;
+        
+        function startGame(gameId) {
+            currentGame = gameId;
+            const game = games[gameId];
+            
+            document.getElementById('game-title').textContent = game.title;
+            document.getElementById('game-description').textContent = game.description;
+            
+            document.getElementById('game-display').innerHTML = '<div class="text-center p-4">Get ready to start...</div>';
+            document.getElementById('game-score').textContent = '0';
+            document.getElementById('game-timer').textContent = game.timeLimit;
+            
+            document.getElementById('game-interface').classList.remove('hidden');
+            document.getElementById('game-input').value = '';
+            document.getElementById('game-input').focus();
+            
+            // Set up game specific elements
+            setupGameElements(gameId);
+            
+            // Start game timer
+            gameTimer = game.timeLimit;
+            gameScore = 0;
+            
+            clearInterval(gameInterval);
+            gameInterval = setInterval(updateGameTimer, 1000);
+            
+            // Set up input handler
+            document.getElementById('game-input').oninput = handleGameInput;
+        }
+        
+        function setupGameElements(gameId) {
+            const gameDisplay = document.getElementById('game-display');
+            gameDisplay.innerHTML = '';
+            
+            if (gameId === 'word-racer') {
+                // Example implementation for word racer game
+                const gameArea = document.createElement('div');
+                gameArea.className = 'relative h-full';
+                
+                const carElement = document.createElement('div');
+                carElement.className = 'absolute bottom-0 left-0';
+                carElement.innerHTML = '<i class="fas fa-car text-2xl text-blue-500"></i>';
+                carElement.style.transition = 'left 0.5s ease';
+                carElement.id = 'player-car';
+                
+                const finishLine = document.createElement('div');
+                finishLine.className = 'absolute top-0 right-0 h-full w-1 bg-red-500';
+                
+                const wordElement = document.createElement('div');
+                wordElement.className = 'absolute top-4 left-1/2 transform -translate-x-1/2 text-xl font-bold';
+                wordElement.id = 'target-word';
+                wordElement.textContent = getRandomItem(games[gameId].words);
+                
+                gameArea.appendChild(finishLine);
+                gameArea.appendChild(carElement);
+                gameArea.appendChild(wordElement);
+                
+                gameDisplay.appendChild(gameArea);
+            }
+            
+            // Other game setups would be implemented similarly
+        }
+        
+        function updateGameTimer() {
+            gameTimer--;
+            document.getElementById('game-timer').textContent = gameTimer;
+            
+            if (gameTimer <= 0) {
+                endGame();
+            }
+        }
+        
+        function handleGameInput() {
+            const input = document.getElementById('game-input').value;
+            
+            if (currentGame === 'word-racer') {
+                const targetWord = document.getElementById('target-word').textContent;
+                
+                if (input === targetWord) {
+                    // Word completed
+                    gameScore += targetWord.length;
+                    document.getElementById('game-score').textContent = gameScore;
+                    
+                    // Move car forward
+                    const car = document.getElementById('player-car');
+                    const currentPos = parseInt(car.style.left) || 0;
+                    const newPos = Math.min(currentPos + 20, 80);
+                    car.style.left = `${newPos}%`;
+                    
+                    // New word
+                    document.getElementById('target-word').textContent = getRandomItem(games[currentGame].words);
+                    document.getElementById('game-input').value = '';
+                    
+                    // End game if reached finish line
+                    if (newPos >= 80) {
+                        gameTimer = Math.min(gameTimer, 5); // End soon if finished
+                    }
+                }
+            }
+            
+            // Other game input handlers would be implemented similarly
+        }
+        
+        function endGame() {
+            clearInterval(gameInterval);
+            
+            // Show end game message
+            document.getElementById('game-display').innerHTML = `
+                <div class="text-center p-4">
+                    <h3 class="text-xl font-bold mb-2">Game Over!</h3>
+                    <p class="mb-2">Your final score: ${gameScore}</p>
+                    <p>Great job!</p>
+                </div>
+            `;
+            
+            document.getElementById('game-input').disabled = true;
+        }
+        
+        function resetGame() {
+            clearInterval(gameInterval);
+            document.getElementById('game-interface').classList.add('hidden');
+            document.getElementById('game-input').disabled = false;
+        }
+        
+        // Challenge Functions
+        let currentChallenge = '';
+        let challengeTimer = 0;
+        let challengeInterval = null;
+        let challengeItems = [];
+        let currentChallengeIndex = 0;
+        let challengeStartTime = 0;
+        
+        function startChallenge(challengeId) {
+            currentChallenge = challengeId;
+            const challenge = challenges[challengeId];
+            
+            document.getElementById('challenge-title').textContent = challenge.title;
+            document.getElementById('challenge-description').textContent = challenge.description;
+            
+            // Set up challenge items based on type
+            if (challengeId === 'progressive-words') {
+                challengeItems = challenge.words;
+            } else if (challengeId === 'numbers-1-100') {
+                challengeItems = challenge.numbers;
+            } else if (challengeId === 'speed-challenge') {
+                challengeItems = challenge.words;
+            } else if (challengeId === 'pangram') {
+                challengeItems = challenge.sentences;
+            }
+            
+            currentChallengeIndex = 0;
+            
+            // Update display
+            document.getElementById('challenge-text').textContent = challengeItems[currentChallengeIndex];
+            document.getElementById('challenge-progress').textContent = `1/${challengeItems.length}`;
+            document.getElementById('challenge-timer').textContent = challenge.timeLimit;
+            
+            document.getElementById('challenge-interface').classList.remove('hidden');
+            document.getElementById('challenge-results').classList.add('hidden');
+            document.getElementById('challenge-input').value = '';
+            document.getElementById('challenge-input').focus();
+            
+            // Start timer
+            challengeTimer = challenge.timeLimit;
+            challengeStartTime = Date.now();
+            
+            clearInterval(challengeInterval);
+            challengeInterval = setInterval(updateChallengeTimer, 1000);
+            
+            // Set up input handler
+            document.getElementById('challenge-input').oninput = handleChallengeInput;
+        }
+        
+        function updateChallengeTimer() {
+            challengeTimer--;
+            document.getElementById('challenge-timer').textContent = challengeTimer;
+            
+            if (challengeTimer <= 0) {
+                endChallenge(false);
+            }
+        }
+        
+        function handleChallengeInput() {
+            const input = document.getElementById('challenge-input').value;
+            const currentItem = challengeItems[currentChallengeIndex];
+            
+            if (input === currentItem) {
+                // Move to next item
+                currentChallengeIndex++;
+                
+                if (currentChallengeIndex >= challengeItems.length) {
+                    // Challenge completed
+                    endChallenge(true);
+                } else {
+                    // Update for next item
+                    document.getElementById('challenge-text').textContent = challengeItems[currentChallengeIndex];
+                    document.getElementById('challenge-progress').textContent = `${currentChallengeIndex + 1}/${challengeItems.length}`;
+                    document.getElementById('challenge-input').value = '';
+                }
+            }
+        }
+        
+        function endChallenge(completed) {
+            clearInterval(challengeInterval);
+            
+            const timeUsed = Math.floor((Date.now() - challengeStartTime) / 1000);
+            const totalItems = challengeItems.length;
+            const completedItems = currentChallengeIndex;
+            const accuracy = Math.round((completedItems / totalItems) * 100);
+            const score = completed ? Math.round((totalItems / timeUsed) * 100) : Math.round((completedItems / totalItems) * 100);
+            
+            document.getElementById('challenge-interface').classList.add('hidden');
+            document.getElementById('challenge-results').classList.remove('hidden');
+            
+            document.getElementById('challenge-results-message').textContent = completed 
+                ? `Congratulations! You completed the challenge in ${timeUsed} seconds.` 
+                : `Time's up! You completed ${completedItems} out of ${totalItems} items.`;
+            
+            document.getElementById('challenge-time-used').textContent = `${timeUsed}s`;
+            document.getElementById('challenge-accuracy-result').textContent = `${accuracy}%`;
+            document.getElementById('challenge-score').textContent = score;
+        }
+        
+        function resetChallenge() {
+            clearInterval(challengeInterval);
+            document.getElementById('challenge-interface').classList.add('hidden');
+            document.getElementById('challenge-results').classList.add('hidden');
+        }
+        
+        function startNumberChallenge() {
+            showSection('typing-challenge');
+            startChallenge('numbers-1-100');
+        }
+        
+        function startSpeedChallenge() {
+            showSection('typing-challenge');
+            startChallenge('speed-challenge');
+        }
+        
+        // Certificate Functions
+        let certificateInterval = null;
+        let certificateTimer = 300; // 5 minutes
+        let certificateStartTime = 0;
+        let certificateActive = false;
+        
+        function startCertificateTest() {
+            document.getElementById('certificate-text').textContent = certificateText;
+            document.getElementById('certificate-input').value = '';
+            document.getElementById('certificate-wpm').textContent = '0';
+            document.getElementById('certificate-accuracy').textContent = '0%';
+            document.getElementById('certificate-progress').textContent = '0%';
+            document.getElementById('certificate-timer').textContent = '05:00';
+            
+            document.getElementById('certificate-test').classList.remove('hidden');
+            document.getElementById('certificate-result').classList.add('hidden');
+            document.getElementById('certificate-input').focus();
+            
+            // Start timer
+            certificateTimer = 300;
+            certificateStartTime = Date.now();
+            certificateActive = true;
+            
+            clearInterval(certificateInterval);
+            certificateInterval = setInterval(updateCertificateTimer, 1000);
+            
+            // Set up input handler
+            document.getElementById('certificate-input').oninput = updateCertificateProgress;
+        }
+        
+        function updateCertificateTimer() {
+            if (!certificateActive) return;
+            
+            certificateTimer--;
+            document.getElementById('certificate-timer').textContent = formatTime(certificateTimer);
+            
+            if (certificateTimer <= 0) {
+                endCertificateTest();
+            }
+        }
+        
+        function updateCertificateProgress() {
+            if (!certificateActive) return;
+            
+            const input = document.getElementById('certificate-input').value;
+            const targetText = document.getElementById('certificate-text').textContent;
+            
+            let correctCount = 0;
+            
+            for (let i = 0; i < input.length; i++) {
+                if (i < targetText.length && input[i] === targetText[i]) {
+                    correctCount++;
+                }
+            }
+            
+            const progress = Math.round((input.length / targetText.length) * 100);
+            const accuracy = input.length > 0 ? Math.round((correctCount / input.length) * 100) : 0;
+            
+            const elapsedSeconds = Math.max(1, Math.floor((Date.now() - certificateStartTime) / 1000));
+            const wpm = calculateWPM(correctCount, elapsedSeconds);
+            
+            document.getElementById('certificate-wpm').textContent = wpm;
+            document.getElementById('certificate-accuracy').textContent = `${accuracy}%`;
+            document.getElementById('certificate-progress').textContent = `${progress}%`;
+            
+            // End test if completed
+            if (input.length >= targetText.length) {
+                endCertificateTest();
+            }
+        }
+        
+        function endCertificateTest() {
+            certificateActive = false;
+            clearInterval(certificateInterval);
+            
+            const input = document.getElementById('certificate-input').value;
+            const targetText = document.getElementById('certificate-text').textContent;
+            
+            let correctCount = 0;
+            
+            for (let i = 0; i < input.length; i++) {
+                if (i < targetText.length && input[i] === targetText[i]) {
+                    correctCount++;
+                }
+            }
+            
+            const elapsedSeconds = Math.max(1, Math.floor((Date.now() - certificateStartTime) / 1000));
+            const wpm = calculateWPM(correctCount, elapsedSeconds);
+            const accuracy = input.length > 0 ? Math.round((correctCount / input.length) * 100) : 0;
+            
+            // Show certificate
+            document.getElementById('certificate-test').classList.add('hidden');
+            document.getElementById('certificate-result').classList.remove('hidden');
+            
+            document.getElementById('certificate-final-wpm').textContent = `${wpm} WPM`;
+            document.getElementById('certificate-final-accuracy').textContent = `${accuracy}%`;
+            
+            const today = new Date();
+            const dateString = today.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            document.getElementById('certificate-date').textContent = dateString;
+        }
+        
+        function resetCertificateTest() {
+            certificateActive = false;
+            clearInterval(certificateInterval);
+            document.getElementById('certificate-test').classList.add('hidden');
+            document.getElementById('certificate-result').classList.add('hidden');
+        }
+        
+        function updateCertificate() {
+            const name = document.getElementById('user-name').value || 'Typing Test User';
+            document.getElementById('certificate-name').textContent = name;
+        }
+        
+        function printCertificate() {
+            const certificateContent = document.getElementById('certificate-display').innerHTML;
+            const printWindow = window.open('', '_blank');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Typing Skills Certificate</title>
+                    <style>
+                        body {
+                            font-family: 'Arial', sans-serif;
+                            padding: 40px;
+                        }
+                        .certificate {
+                            background-color: #fff;
+                            color: #000;
+                            padding: 40px;
+                            border: 10px solid #1e88e5;
+                            position: relative;
+                        }
+                        .certificate-seal {
+                            position: absolute;
+                            bottom: 40px;
+                            right: 40px;
+                            width: 100px;
+                            height: 100px;
+                            background-color: #1e88e5;
+                            border-radius: 50%;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            color: white;
+                            font-weight: bold;
+                            transform: rotate(-15deg);
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="certificate">
+                        ${certificateContent}
+                    </div>
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 500);
+        }
+        
+        // Initialize the application
+        function initApp() {
+            // Check for saved dark mode preference
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('darkModeToggle').checked = true;
+            }
+            
+            // Show default section
+            showSection('home');
+        }
+        
+        // Run initialization when the page loads
+        window.onload = initApp;
+    </script>
+</body>
+</html>
+
